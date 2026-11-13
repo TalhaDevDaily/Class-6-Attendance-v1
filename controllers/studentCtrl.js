@@ -19,6 +19,12 @@ function findMonth(date) {
 }
 // console.log(findMonth('25/04/2025'));
 
+// Separating date by '-'
+function sortingDate(date) {
+  return date.split('-').join('/');
+}
+// console.log(sortingDate('25-04-2025'));
+
 const dateRegex =
   /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
 
@@ -67,7 +73,7 @@ async function readAll(req, res) {
 }
 
 // Read Attendance by Month
-async function readByYear(req, res) {
+async function readByMonth(req, res) {
   const { month } = req.params;
   const readMonth = await Attendance.find({ month: month });
 
@@ -78,4 +84,50 @@ async function readByYear(req, res) {
   });
 }
 
-module.exports = { createEntry };
+// Read Attendance by Date
+async function readByFullDate(req, res) {
+  const { date } = req.params;
+
+  const readDate = await Attendance.find({ date: sortingDate(date) });
+
+  res.status(200).json({
+    success: true,
+    message: `On ${date} there were ${readDate.length} entries made`,
+    readDate,
+  });
+}
+
+// Update Attendance
+async function updateEntry(req, res) {
+  const { id } = req.params;
+
+  const updateAtt = await Attendance.findByIdAndUpdate({ _id: id }, req.body, {
+    returnDocument: 'after',
+  });
+
+  res.status(200).json({
+    success: true,
+    message: `Changes below has been made!`,
+    updateAtt,
+  });
+}
+
+// Delete Entry
+async function deleteEntry(req, res) {
+  const { id } = req.params;
+
+  const remove = await Attendance.findByIdAndDelete(id);
+
+  res
+    .status(200)
+    .json({ success: true, message: `Entry below has been deleted`, remove });
+}
+
+module.exports = {
+  createEntry,
+  readAll,
+  readByMonth,
+  readByFullDate,
+  updateEntry,
+  deleteEntry,
+};
