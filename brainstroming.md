@@ -21,14 +21,14 @@ Solution:
 Y/N =>
 
 ```
-mongoose.Schema.Types.Boolean.get(v => v === true ? 'yes' : 'no');
+mongoose.Schema.Types.Boolean.get(v => v === 'yes' ? true : false);
 
 const Order = mongoose.model('Order', new Schema({ isPaid: Boolean }));
 new Order({ isPaid: false }).isPaid; // 'no'
 ```
 
 Source: https://mongoosejs.com/docs/api/schemaboolean.html
-Basically: `{get: (val) => (val ? 'Yes' : 'No')},
+Basically: val = yes/no `{set: (val) => (val === yes || Yes ? true : false)}, // set for setter in MongoDB
 
 Date =>
 regex = ^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$
@@ -48,12 +48,48 @@ Year: 2026
 
 ## Attempt - 1
 
-- Scenario: 1 student, and multiple assigned dates
+- Scenario: Input multiple students with multiple dates of homework & attendance history
+  Can be sorted and searched by date '25/03/2025', by month 'march'
+
+  const months = [
+  'january', 'february', 'march', 'april', 'may', 'june',
+  'july', 'august', 'september', 'october', 'november', 'december'
+  ];
+
+function findMonth(date) {
+return months[date.split('/')[1] - 1];
+}
 
 ## Attempt - 2
+
+- Scenario: 1 student, and multiple assigned dates. Student's homework & attendance history
+- Dates will go as Strings, with regex(DD/MM/YYYY) along with homework.
+  Problem: how to look up a student and then append a date and homework
 
 ## Attempt - 3
 
 ## Attempt - 4
 
 ## Attempt - 5
+
+#### mongodb uri - mongodb+srv://TalhaDevDaily:%40R0146306c@nodejs-sandbox.zmstzzn.mongodb.net/attendanceDB
+
+### Attendees
+
+Michael Jackson
+Stanley Marsh
+Kyle Broflovski
+Eric Cartman
+Kenneth McCormick
+Butters Stotch
+
+### Dates
+
+01/01/2027
+23/01/2027
+
+14/02/2027
+18/02/2027
+
+25/03/2027
+26/03/2027
