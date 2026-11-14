@@ -19,6 +19,9 @@ function findMonth(date) {
 }
 // console.log(findMonth('25/04/2025'));
 
+// Function for finding Name
+// function convertName ()
+
 // Separating date by '-'
 function sortingDate(date) {
   return date.split('-').join('/');
@@ -69,6 +72,18 @@ async function readAll(req, res) {
     success: true,
     message: `You have logged ${readAttendance.length} so far!`,
     readAttendance,
+  });
+}
+
+// Read Attendance by Name
+async function readByName(req, res) {
+  const { fullName } = req.params;
+
+  const readName = await Attendance.find({ fullName: fullName });
+  res.status(200).json({
+    success: true,
+    message: `${fullName} has ${readName.length} entries so far!`,
+    readName,
   });
 }
 
@@ -126,6 +141,7 @@ async function deleteEntry(req, res) {
 module.exports = {
   createEntry,
   readAll,
+  readByName,
   readByMonth,
   readByFullDate,
   updateEntry,
